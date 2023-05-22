@@ -6,14 +6,14 @@ export default function App() {
 
   useEffect(() => {
     axios.get("http://localhost:3000")
-      .then(res => setItems(res))
+      .then(res => setItems(res.data.items))
       .catch(err => console.log(err))
   }, [])
 
   return (
     <>
-    <h1>News Feed</h1>
-    <pre>{JSON.stringify(items, null, 2)}</pre>
+      <h1>News Feed</h1>
+      <pre>{JSON.stringify(items, null, 2)}</pre>
     </>
   )
 }

@@ -1,15 +1,12 @@
 import express from "express"
-
-import {
-    all_items as rdt_all,
-    latest_item as rdt_latest
-} from "./services/reddit_parser.js"
+import RedditParser from "./services/reddit-parser.js"
 
 const app = express()
+const redditParser = new RedditParser()
 
 // Simply fetch latest entry from an RSS feed
 app.get("/", async (req, res) => {
-    res.status(200).json(await rdt_latest())
+    res.status(200).json(await redditParser.all())
 })
 
 app.listen(3000)
