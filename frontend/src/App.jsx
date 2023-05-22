@@ -1,23 +1,21 @@
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from "react"
 import axios from "axios"
-import Article from "../components/Article"
+import Feed from "../components/Feed"
 
 export default function App() {
-  const [items, setItems] = useState([])
+    const [feed, setFeed] = useState({})
 
-  useEffect(() => {
-    axios.get("http://localhost:3000")
-      .then(res => setItems(res.data.items))
-      .catch(err => console.log(err))
-  }, [])
+    useEffect(() => {
+        axios.get("http://localhost:3000")
+            .then(res => setFeed(res.data))
+            .catch(err => console.log(err))
+    }, [])
 
-  return (
-    <>
-      <h1>News Feed</h1>
-      {items.map((item, index) => (
-        <Article key={index} item={item} />
-      ))}
-      <pre>{JSON.stringify(items, null, 2)}</pre>
-    </>
-  )
+    return (
+        <>
+            <h1>News Feed</h1>
+            <Feed feed={feed} />
+            <pre>{JSON.stringify(feed, null, 2)}</pre>
+        </>
+    )
 }
