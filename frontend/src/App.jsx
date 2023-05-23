@@ -5,62 +5,68 @@ import io from "socket.io-client"
 import "bootstrap/dist/css/bootstrap.min.css"
 
 export default function App() {
-    const [feed, setFeed] = useState({})
+  const [feed, setFeed] = useState({})
 
-    useEffect(() => {
-        // Fetch RSS feed from backend
-        axios.get("http://localhost:3000")
-            .then(res => setFeed(res.data))
-            .catch(err => console.log(err))
-        // Tell the component to update feed when backend sends update
-        const socket = io("http://localhost:3000")
-        socket.on("feed update", (newFeed) => {
-            setFeed(newFeed)
-        })
-        // Return cleanup function
-        // (called before component unmounts/dependencies change)
-        return () => socket.disconnect()
-    }, [])
+  useEffect(() => {
+    // Fetch RSS feed from backend
+    axios.get("http://localhost:3000")
+      .then(res => setFeed(res.data))
+      .catch(err => console.log(err))
+    // Tell the component to update feed when backend sends update
+    const socket = io("http://localhost:3000")
+    socket.on("feed update", (newFeed) => {
+      setFeed(newFeed)
+    })
+    // Return cleanup function
+    // (called before component unmounts/dependencies change)
+    return () => socket.disconnect()
+  }, [])
 
-    return (
-        <>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container">
-                    <a class="navbar-brand" href="#">Mews</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+  return (
+    <>
+      {/* Navigation Topbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div className="container">
+          <a className="navbar-brand" href="#">Mews</a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" href="#">Home</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">About</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-            <div class="container mt-4">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action">Feed 1</a>
-                            <a href="#" class="list-group-item list-group-item-action">Feed 2</a>
-                            <a href="#" class="list-group-item list-group-item-action">Feed 3</a>
-                        </div>
-                    </div>
+      {/* Main Body */}
+      <div className="container mt-4">
 
-                    <div class="col-lg-9">
-                        <Feed feed={feed} />
-                    </div>
-                </div>
+        <div className="row">
+          {/* Feed Selection Sidebar */}
+          <div className="col-lg-3">
+            <div className="list-group">
+              <a href="#" className="list-group-item list-group-item-action">Feed 1</a>
+              <a href="#" className="list-group-item list-group-item-action">Feed 2</a>
+              <a href="#" className="list-group-item list-group-item-action">Feed 3</a>
             </div>
-        </>
-    )
+          </div>
+
+          {/* Feed Component */}
+          <div className="col-lg-9">
+            <Feed feed={feed} />
+          </div>
+
+        </div>
+      </div>
+    </>
+  )
 }

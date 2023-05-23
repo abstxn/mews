@@ -17,12 +17,12 @@ export default function areFeedsDiff(feed1, feed2) {
 
     const set1 = new Set()
     feed1.items.map(item => {
-        set1.add(item.id)
+        set1.add(item.title)
     })
 
     const set2 = new Set()
     feed2.items.map(item => {
-        set2.add(item.id)
+        set2.add(item.title)
     })
 
     if (areSetsEqual(set1, set2)) {

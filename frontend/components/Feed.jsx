@@ -1,23 +1,21 @@
 import React from 'react'
-import Article from "../components/Article"
+import Article from "./ArticleCard"
 import { formatDatetime } from '../utils/format-datetime'
 
-function itemsToArticles(items) {
-    return items.map((item, id) =>
-        <Article key={id} item={item} />
-    )
+function itemsToArticles(items, source) {
+  return items.map((item, id) =>
+    <Article key={id} item={item} source={source} />
+  )
 }
 
 export default function Feed({ feed }) {
-    if (!feed.items) return null
+  if (!feed.items) return null
 
-    const formatTimestamp = formatDatetime(feed.lastBuildDate)
+  const formatTimestamp = formatDatetime(feed.lastBuildDate)
 
-    return (
-        <>
-            <h2>{feed.title}</h2>
-            <p>Last updated: {formatTimestamp}</p>
-            {itemsToArticles(feed.items)}
-        </>
-    )
+  return (
+    <div>
+      {itemsToArticles(feed.items, feed.title)}
+    </div>
+  )
 }
