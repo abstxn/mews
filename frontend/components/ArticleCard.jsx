@@ -8,7 +8,7 @@ export default function Article({ item, source }) {
     <div className="card">
       <div className="card-body">
         <h5 className="card-title"><a href={item.link}>{item.title}</a></h5>
-        <p className="card-text">{item.content}</p>
+        <p className="card-text">{item.contentSnippet}</p>
       </div>
       <div className="card-footer">
         <div className="d-flex justify-content-between">

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import Feed from "../components/Feed"
 import io from "socket.io-client"
 import "bootstrap/dist/css/bootstrap.min.css"
+import CombinedFeed from "../components/CombinedFeed"
 
 export default function App() {
 
@@ -16,14 +16,12 @@ export default function App() {
       })
       .catch(err => console.log(err))
 
-    // const socket = io("http://localhost:3000")
+    const socket = io("http://localhost:3000")
     // socket.on("feed update", (newFeed) => {
     //   setFeed(newFeed)
     // })
 
-    // Return cleanup function
-    // (called before component unmounts/dependencies change)
-    // return () => socket.disconnect()
+    return () => socket.disconnect()
   }, [])
 
   return (
@@ -58,17 +56,14 @@ export default function App() {
           {/* Feed Selection Sidebar */}
           <div className="col-lg-3">
             <div className="list-group">
-              <a href="#" className="list-group-item list-group-item-action">Feed 1</a>
-              <a href="#" className="list-group-item list-group-item-action">Feed 2</a>
-              <a href="#" className="list-group-item list-group-item-action">Feed 3</a>
+              <a href="#" className="list-group-item list-group-item-action">CNA Latest News</a>
+              <a href="#" className="list-group-item list-group-item-action">Reddit Front Page</a>
             </div>
           </div>
 
           {/* Feed Component */}
           <div className="col-lg-9">
-            {feeds.map((feed, index) => 
-              <Feed key={index} feed={feed} />
-            )}
+            <CombinedFeed feeds={feeds} />
           </div>
 
         </div>

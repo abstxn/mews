@@ -16,8 +16,9 @@ export default class Feed {
         this.parser = new Parser()
     }
 
+    // Always returns the latest articles
     async getArticles() {
-        if (!this.articles) await this.update()
+        await this.update()
         return this.articles
     }
 
