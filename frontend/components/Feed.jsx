@@ -3,8 +3,8 @@ import Article from "../components/Article"
 import { formatDatetime } from '../utils/format-datetime'
 
 function itemsToArticles(items) {
-    return items.map((item, index) =>
-        <Article key={index} item={item} />
+    return items.map((item, id) =>
+        <Article key={id} item={item} />
     )
 }
 

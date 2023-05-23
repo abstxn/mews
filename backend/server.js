@@ -1,32 +1,34 @@
 import express, { json } from "express"
-import RedditParser from "./services/reddit-parser.js"
 import http from "http"
 import { Server } from "socket.io"
+import RedditParser from "./services/reddit-parser.js"
+import areFeedsDiff from "./services/feed-differ.js"
 
 const app = express()
 const redditParser = new RedditParser()
 const server = http.createServer(app)
 const io = new Server(server)
 
-let feed = null
+let currFeed = null
 
 io.on("connection", socket => {
     console.log("Client connected")
 
     setInterval(async () => {
-        feed = await redditParser.all()
-        socket.emit("feed update", feed)
-    }, 5 * 1000)
+        const newFeed = await redditParser.all()
+        if (areFeedsDiff(currFeed, newFeed)) {
+            socket.emit("feed update", newFeed)
+        }
+        currFeed = newFeed
+    }, 10 * 1000)
 
-    socket.on("disconnect", () => {
-        console.log("Client disconnected")
-    })
+    socket.on("disconnect", () => console.log("Client disconnected"))
 })
 
 app.get("/", async (req, res) => {
-    if (!feed) feed = await redditParser.all()
+    if (!currFeed) currFeed = await redditParser.all()
 
-    res.status(200).json(feed)
+    res.status(200).json(currFeed)
 })
 
 const port = 3000
