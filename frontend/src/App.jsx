@@ -5,21 +5,25 @@ import io from "socket.io-client"
 import "bootstrap/dist/css/bootstrap.min.css"
 
 export default function App() {
-  const [feed, setFeed] = useState({})
+
+  const [feeds, setFeeds] = useState([])
 
   useEffect(() => {
-    // Fetch RSS feed from backend
-    axios.get("http://localhost:3000")
-      .then(res => setFeed(res.data))
+    axios
+      .get("http://localhost:3000")
+      .then(res => {
+        setFeeds(res.data)
+      })
       .catch(err => console.log(err))
-    // Tell the component to update feed when backend sends update
-    const socket = io("http://localhost:3000")
-    socket.on("feed update", (newFeed) => {
-      setFeed(newFeed)
-    })
+
+    // const socket = io("http://localhost:3000")
+    // socket.on("feed update", (newFeed) => {
+    //   setFeed(newFeed)
+    // })
+
     // Return cleanup function
     // (called before component unmounts/dependencies change)
-    return () => socket.disconnect()
+    // return () => socket.disconnect()
   }, [])
 
   return (
@@ -62,7 +66,9 @@ export default function App() {
 
           {/* Feed Component */}
           <div className="col-lg-9">
-            <Feed feed={feed} />
+            {feeds.map((feed, index) => 
+              <Feed key={index} feed={feed} />
+            )}
           </div>
 
         </div>

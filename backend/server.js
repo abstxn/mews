@@ -1,37 +1,49 @@
 import express, { json } from "express"
 import http from "http"
 import { Server } from "socket.io"
-import RedditParser from "./services/reddit-parser.js"
-import CNAParser from "./services/cna-parser.js"
-import areFeedsDiff from "./services/feed-differ.js"
+import Feed from "./models/Feed.js"
 
+
+// Initialization
 const app = express()
-const parser = new CNAParser()
 const server = http.createServer(app)
 const io = new Server(server)
+const cnaFeed = new Feed(
+    "CNA's Latest News",
+    "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml"
+)
+const redditFeed = new Feed(
+    "Reddit's Front Page",
+    "https://www.reddit.com/.rss"
+)
 
-let currFeed = null
 
+// Setup I/O
 io.on("connection", socket => {
-    console.log("Client connected")
-
-    setInterval(async () => {
-        const newFeed = await parser.all()
-        if (areFeedsDiff(currFeed, newFeed)) {
-            socket.emit("feed update", newFeed)
-        }
-        currFeed = newFeed
-    }, 10 * 1000)
-
-    socket.on("disconnect", () => console.log("Client disconnected"))
+    console.log("A client connected")
+    socket.on("disconnect", () => {
+        console.log("A client disconnected")
+    })
 })
 
+
+// Declare routes
 app.get("/", async (req, res) => {
-    if (!currFeed) currFeed = await parser.all()
-
-    res.status(200).json(currFeed)
+    const feeds = [
+        {
+            "name":cnaFeed.name,
+            "articles": await cnaFeed.getArticles()
+        },
+        {
+            "name": redditFeed.name,
+            "articles": await redditFeed.getArticles()
+        }
+    ]
+    res.json(feeds)
 })
 
+
+// Start listening for connections
 const port = 3000
 server.listen(port, () => {
     console.log(`Server listening to port ${port}`)
