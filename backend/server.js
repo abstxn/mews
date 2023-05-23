@@ -2,10 +2,11 @@ import express, { json } from "express"
 import http from "http"
 import { Server } from "socket.io"
 import RedditParser from "./services/reddit-parser.js"
+import CNAParser from "./services/cna-parser.js"
 import areFeedsDiff from "./services/feed-differ.js"
 
 const app = express()
-const redditParser = new RedditParser()
+const parser = new CNAParser()
 const server = http.createServer(app)
 const io = new Server(server)
 
@@ -15,7 +16,7 @@ io.on("connection", socket => {
     console.log("Client connected")
 
     setInterval(async () => {
-        const newFeed = await redditParser.all()
+        const newFeed = await parser.all()
         if (areFeedsDiff(currFeed, newFeed)) {
             socket.emit("feed update", newFeed)
         }
@@ -26,7 +27,7 @@ io.on("connection", socket => {
 })
 
 app.get("/", async (req, res) => {
-    if (!currFeed) currFeed = await redditParser.all()
+    if (!currFeed) currFeed = await parser.all()
 
     res.status(200).json(currFeed)
 })
