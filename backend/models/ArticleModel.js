@@ -6,16 +6,11 @@ export default class ArticleModel {
     timestamp   // ISO date (as final rendered date is relative to client)
     source      // Source feed of the article
 
-    constructor(item, feedName) {
-        console.log(item)
-        this.title = item.title
-        this.summary = item.contentSnippet
-        this.url = item.link
-        this.timestamp = item.isoDate
+    constructor(article, feedName) {
+        this.title = article.title
+        this.summary = article.contentSnippet
+        this.url = article.link
+        this.timestamp = article.isoDate
         this.source = feedName
-    }
-
-    toString() {
-        return `${title}`
     }
 }

@@ -2,6 +2,7 @@ import express, { json } from "express"
 import http from "http"
 import { Server } from "socket.io"
 import Feed from "./models/FeedModel.js"
+import collect from "./controllers/FeedCollector.js"
 
 // Initialization
 const app = express()
@@ -26,7 +27,7 @@ io.on("connection", socket => {
 
 // Declare routes
 app.get("/", async (req, res) => {
-    res.json(await cnaFeed.getArticles())
+    res.json(await collect(cnaFeed, redditFeed))
 })
 
 // Start listening for connections

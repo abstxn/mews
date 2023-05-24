@@ -2,7 +2,6 @@ import React from "react"
 import { formatDatetime } from "../utils/format-datetime"
 
 export default function Article({ article }) {
-  console.log(article)
   const articleTimestamp = formatDatetime(article.timestamp)
 
   return (
