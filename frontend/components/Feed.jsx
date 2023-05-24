@@ -1,5 +1,5 @@
 import React from 'react'
-import Article from "./ArticleCard"
+import Article from "./Article"
 
 function displayArticles(articles, source) {
   return articles.map((item, id) =>

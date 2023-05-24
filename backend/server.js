@@ -1,8 +1,7 @@
 import express, { json } from "express"
 import http from "http"
 import { Server } from "socket.io"
-import Feed from "./models/Feed.js"
-
+import Feed from "./models/FeedModel.js"
 
 // Initialization
 const app = express()
@@ -17,7 +16,6 @@ const redditFeed = new Feed(
     "https://www.reddit.com/.rss"
 )
 
-
 // Setup I/O
 io.on("connection", socket => {
     console.log("A client connected")
@@ -26,22 +24,10 @@ io.on("connection", socket => {
     })
 })
 
-
 // Declare routes
 app.get("/", async (req, res) => {
-    const feeds = [
-        {
-            "name":cnaFeed.name,
-            "articles": await cnaFeed.getArticles()
-        },
-        {
-            "name": redditFeed.name,
-            "articles": await redditFeed.getArticles()
-        }
-    ]
-    res.json(feeds)
+    res.json(await cnaFeed.getArticles())
 })
-
 
 // Start listening for connections
 const port = 3000

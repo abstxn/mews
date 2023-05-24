@@ -1,10 +1,11 @@
 import React from 'react'
-import Feed from './Feed'
+import Article from './Article'
 
-export default function CombinedFeed({ feeds }) {
+export default function CombinedFeed({ articles }) {
   return (
-    feeds.map((feed, index) => 
-        <Feed key={index} feed={feed} />
-    )
+    articles.map((article, index) => {
+      // console.log(article)
+      return <Article key={index} article={article} />
+    })
   )
 }
