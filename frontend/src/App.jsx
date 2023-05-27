@@ -9,19 +9,47 @@ import FeedSelection from "../components/FeedSelection"
 export default function App() {
 
   const [articles, setArticles] = useState([])
+  const [activeFeeds, setActiveFeeds] = useState([true, true, true, true])
+
+  const handleChange = feedIndex => changeEvent => {
+    const newActiveFeeds = [...activeFeeds]
+    newActiveFeeds[feedIndex] = !activeFeeds[feedIndex]
+    setActiveFeeds(newActiveFeeds)
+  }
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000")
-      .then(res => setArticles(res.data))
-      .catch(err => console.log(err))
+    console.log("Change in selection.")
+    axios.post('http://localhost:3000', {
+      feedSelection: activeFeeds
+    })
+    .then(response => {
+      setArticles(response.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }, [activeFeeds])
 
-    const socket = io("http://localhost:3000")
+  useEffect(() => {
+    // TODO:
+    // Here, the client needs to add details about which feeds the user
+    // are interested in, and send it as data together with the GET request.
+    // axios.post('http://localhost:3000', {
+    //   feedSelection: activeFeeds
+    // })
+    // .then(response => {
+    //   setArticles(response.data)
+    // })
+    // .catch(err => {
+    //   console.log(err)
+    // })
+
+    // const socket = io("http://localhost:3000")
     // socket.on("feed update", (newFeed) => {
     //   setFeed(newFeed)
     // })
 
-    return () => socket.disconnect()
+    // return () => socket.disconnect()
   }, [])
 
   return (
@@ -29,7 +57,7 @@ export default function App() {
       <NavBar />
       <div className="container mt-4">
         <div className="row">
-          <FeedSelection />
+          <FeedSelection activeFeeds={activeFeeds} handleChange={handleChange} />
           <div className="col-lg-9">
             <CombinedFeed articles={articles} />
           </div>
