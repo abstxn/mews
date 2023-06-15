@@ -1,4 +1,4 @@
-export default class ArticleModel {
+export default class Article {
 
     title
     summary
