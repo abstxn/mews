@@ -13,4 +13,8 @@ export default class Article {
         this.timestamp = article.isoDate
         this.source = feedName
     }
+
+    toString() {
+        return `Article from ${this.source} (${this.title})`
+    }
 }

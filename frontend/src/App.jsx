@@ -7,7 +7,6 @@ import ArticleCrawl from "../components/ArticleCrawl"
 
 export default function App() {
 
-  const [articles, setArticles] = useState([])
   const [socket, setSocket] = useState(null)
   const [latestArticle, setLatestArticle] = useState(null)
 

@@ -82,4 +82,8 @@ export default class Feed extends EventEmitter {
         const article = new Article(item, this.feedName)
         this.emit("newArticle", article)
     }
+
+    toString() {
+        return `${this.feedName} [${this.feedURL}]`
+    }
 }

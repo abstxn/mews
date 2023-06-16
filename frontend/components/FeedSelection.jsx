@@ -4,20 +4,19 @@ import FeedCheckbox from './FeedCheckbox'
 
 export default function FeedSelection( {socket} ) {
 
-  const [feedNames, setFeedNames] = useState([])
-  const [checkboxStates, setCheckboxStates] = useState([])
-  const handleCheck = (index) => {
-    const newCheckboxStates = [...checkboxStates]
-    newCheckboxStates[index] = !newCheckboxStates[index]
-    setCheckboxStates(newCheckboxStates)
+  const [feedSelection, setFeedSelection] = useState({})
+  const handleCheck = (feedName) => {
+    setFeedSelection({
+      ...feedSelection,
+      [feedName]:!feedSelection[feedName]
+    })
   }
 
   useEffect(() => {
     const initialFetch = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/feed-names")
-        setFeedNames(response.data.feedNames)
-        setCheckboxStates(Array(response.data.feedNames.length).fill(true))
+        const response = await axios.get("http://localhost:3000/get_default_feed_selection")
+        setFeedSelection(response.data.defaultFeedSelection)
       } catch (error) {
         console.log(error)
       }
@@ -26,18 +25,20 @@ export default function FeedSelection( {socket} ) {
   }, [])
 
   useEffect(() => {
-    console.log("Change in checkbox states detected. Sending state to backend.")
+    console.log("Change in feed selection detected. Sending state to backend.")
     if (socket) {
-      socket.emit("checkboxStateChange", {newCheckboxStates:checkboxStates})
+      socket.emit("feedSelectionUpdate", feedSelection)
     }
-  }, [checkboxStates])
+  }, [feedSelection])
 
   return (
     <div className="col-lg-3">
       <div className="list-group">
-        {feedNames.map((feedName, index) => {
-          return <FeedCheckbox key={index} feedName={feedName} checked={checkboxStates[index]} onChange={() => handleCheck(index)} />
-        })}
+        {
+          Object.keys(feedSelection).map((feedName, index) => {
+            return <FeedCheckbox key={index} feedName={feedName} checked={feedSelection[feedName]} onChange={() => handleCheck(feedName)} />
+          })
+        }
       </div>
     </div>
   )
