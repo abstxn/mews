@@ -3,6 +3,7 @@ import http from "http"
 import { Server } from "socket.io"
 import FeedController from "./controllers/FeedController.js"
 import ClientController from "./controllers/ClientController.js"
+import OpenAIController from "./controllers/OpenAIController.js"
 
 const app = express()
 app.use(express.json())
@@ -13,7 +14,7 @@ const io = new Server(server)
 
 const feedController = new FeedController()
 feedController.on("newArticle", article => {
-    console.log("FeedController detected new article.")
+    // console.log("FeedController detected new article.")
     clientController.dispatch(article)
 })
 
@@ -49,6 +50,9 @@ app.get("/get_default_feed_selection", (req, res) => {
 
 // Start
 // -----------------------------------------------------------------------------
+
+const ai_helper = new OpenAIController()
+ai_helper.foo()
 
 const port = 3000
 server.listen(port, () => {
